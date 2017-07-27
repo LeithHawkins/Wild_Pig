@@ -1,5 +1,7 @@
 import arcpy
 import Wild_Pig_Module
+import xlrd
+import xlwt
 
 # Set environment settings
 arcpy.env.workspace = "C:\\Users\\hawkinle\\Desktop\\STDTAS"
@@ -18,15 +20,10 @@ try:
     # Make the XY event layer...
     arcpy.MakeXYEventLayer_management(in_Table, x_coords, y_coords, out_Layer, spRef)
 
-    # Print the total rows
-    #print(arcpy.GetCount_management(out_Layer))
-
     # Save to a layer file
     arcpy.SaveToLayerFile_management(out_Layer, saved_Layer)
     out_FGDB = 'N:\Wild_Pig_Project\All_Collars.gdb\All_Collars'
     out_FC = '\\' + 'All_Collars'
-    #arcpy.CopyFeatures_management(saved_Layer, out_FGDB + out_FC)
-    #print('Copy Complete')
     arcpy.env.outputMFlag = "Disabled"
     arcpy.env.outputZFlag = "Disabled"
     arcpy.FeatureClassToFeatureClass_conversion(saved_Layer, out_FGDB, out_FC)
@@ -34,17 +31,10 @@ try:
 except Exception as err:
     print(err.args[0])
 
-# def unique_values(table, field):
-#     with arcpy.da.SearchCursor(table, [field]) as cursor:
-#         return sorted({row[0] for row in cursor})
-
 All_Collars = out_FGDB + out_FC
-# List_ofValues = unique_values(All_Collars, 'Device_ID')
-# print (List_ofValues)
 arcpy.MakeFeatureLayer_management(All_Collars, 'tempLayer')
 arcpy.Dissolve_management('tempLayer', 'in_memory/device', 'Device_ID')
 print ('Dissolve Complete')
-
 
 with arcpy.da.SearchCursor('in_memory/device' ,['Device_ID']) as dissolve_feature:
     for row in dissolve_feature:
