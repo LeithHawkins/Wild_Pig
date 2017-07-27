@@ -23,7 +23,7 @@ try:
 
     # Save to a layer file
     arcpy.SaveToLayerFile_management(out_Layer, saved_Layer)
-    out_FGDB = 'N:\\Wild_Pig_Project\\Wild_Pig_output.gdb\\Glen_Innes\\'
+    out_FGDB = 'N:\\Wild_Pig_Project\\Wild_Pig_output.gdb\\Glen_Innes'
     out_FC = '\\' + 'Glen_Innes'
     #arcpy.CopyFeatures_management(saved_Layer, out_FGDB + out_FC)
     #print('Copy Complete')
@@ -46,8 +46,14 @@ arcpy.MakeFeatureLayer_management(Glen_Innes, 'tempLayer')
 arcpy.Dissolve_management('tempLayer', 'in_memory/device', 'Device_ID')
 print ('Dissolve Complete')
 
+
 with arcpy.da.SearchCursor('in_memory/device' ,['Device_ID']) as dissolve_feature:
     for row in dissolve_feature:
         refNumber = str(row[0])
+        feature = out_FGDB + '\\'
+        Selection_q = '"Device_ID" ='+ refNumber
+        print (Selection_q)
         print(refNumber)
+        arcpy.SelectLayerByAttribute_management('templayer', 'NEW_SELECTION', Selection_q)
+        arcpy.FeatureClassToFeatureClass_conversion('templayer', feature, 'Device_ID' + refNumber)
 
