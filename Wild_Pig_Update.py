@@ -20,13 +20,17 @@ try:
     # Make the XY event layer...
     arcpy.MakeXYEventLayer_management(in_Table, x_coords, y_coords, out_Layer, spRef)
 
-    # Save to a layer file
+    # Save to a layer file create feature class - update datefield and delete
     arcpy.SaveToLayerFile_management(out_Layer, saved_Layer)
     out_FGDB = 'N:\Wild_Pig_Project\All_Collars.gdb\All_Collars'
     out_FC = '\\' + 'All_Collars'
+    Full_path = out_FGDB + out_FC
     arcpy.env.outputMFlag = "Disabled"
     arcpy.env.outputZFlag = "Disabled"
     arcpy.FeatureClassToFeatureClass_conversion(saved_Layer, out_FGDB, out_FC)
+    arcpy.AddField_management(Full_path, 'Local_Date', 'DATE')
+    arcpy.CalculateField_management(Full_path, 'Local_Date', '!Date___Time__Local_!', 'PYTHON')
+    arcpy.DeleteField_management(Full_path, 'Date___Time__GMT_', 'Date___Time__Local_')
 
 except Exception as err:
     print(err.args[0])
