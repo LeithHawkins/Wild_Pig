@@ -106,7 +106,7 @@ ENV/
 
 All_Collars.gdb/
 GI_Combined_Test.csv
-Meant_temp.csv
+Mean_temp.csv
 Count_Pig.csv
 Export_Maps/
 Heatmap_raster/
