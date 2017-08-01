@@ -105,3 +105,6 @@ ENV/
 .csv
 
 All_Collars.gdb/
+GI_Combined_Test.csv/
+Meant_temp.csv/
+Count_Pig.csv/
